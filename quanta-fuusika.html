@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quanta — füüsika lihtsalt selgitatult</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Literata:opsz,wght@18..72,400;18..72,500;18..72,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1720;
+  --bg-alt:#141f2a;
+  --grid-line:rgba(237,234,224,0.055);
+  --ink:#edeae0;
+  --ink-dim:#aab2bd;
+  --ink-faint:#6d7684;
+  --chalk-yellow:#f2c94c;
+  --chalk-yellow-dim:#8a752f;
+  --teal:#5fb4a2;
+  --teal-dim:#355f57;
+  --coral:#e08a6b;
+  --card-bg:#16212c;
+  --card-border:rgba(237,234,224,0.09);
+  --radius:10px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0/40px 40px,
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0/40px 40px,
+    var(--bg);
+  color:var(--ink);
+  font-family:'Literata', serif;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.mono,nav,.tag,.eyebrow,button,.btn{font-family:'Space Mono', monospace;}
+::selection{background:var(--chalk-yellow); color:#141f2a;}
+a{color:inherit;}
+
+/* focus visibility */
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible{
+  outline:2px solid var(--chalk-yellow); outline-offset:3px; border-radius:4px;
+}
+
+.wrap{max-width:960px; margin:0 auto; padding:0 24px;}
+
+/* NAV */
+nav{
+  position:sticky; top:0; z-index:50;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:18px 24px; backdrop-filter:blur(8px);
+  background:rgba(15,23,32,0.82);
+  border-bottom:1px solid var(--card-border);
+}
+.logo{display:flex; align-items:center; gap:8px; font-size:15px; letter-spacing:0.5px;}
+.logo-dot{width:8px; height:8px; border-radius:50%; background:var(--chalk-yellow);}
+.nav-links{display:flex; gap:28px; font-size:13px; color:var(--ink-dim);}
+.nav-link{cursor:default;}
+
+/* HERO */
+.hero{padding:90px 24px 60px; position:relative; overflow:hidden;}
+.eyebrow{
+  font-size:12px; color:var(--teal); letter-spacing:1.5px; text-transform:uppercase;
+  display:flex; align-items:center; gap:10px; margin-bottom:22px;
+}
+.eyebrow::before{content:""; width:22px; height:1px; background:var(--teal);}
+h1.headline{
+  font-size:clamp(32px, 5.5vw, 52px); line-height:1.12; font-weight:700;
+  margin:0 0 20px; max-width:680px; letter-spacing:-0.5px;
+}
+.headline em{font-style:normal; color:var(--chalk-yellow);}
+.sub{font-size:17px; line-height:1.7; color:var(--ink-dim); max-width:480px; margin:0 0 32px;}
+.hero-cta{display:flex; gap:14px; align-items:center;}
+.btn{
+  font-size:13px; padding:12px 20px; border-radius:6px; border:1px solid var(--card-border);
+  background:transparent; color:var(--ink); cursor:pointer; letter-spacing:0.3px;
+  transition:border-color .15s, background .15s;
+}
+.btn:hover{border-color:var(--ink-faint); background:rgba(237,234,224,0.04);}
+.btn.primary{background:var(--chalk-yellow); color:#1a1408; border-color:var(--chalk-yellow); font-weight:700;}
+.btn.primary:hover{background:#f6d876;}
+
+/* trajectory demo svg */
+.traj-wrap{margin-top:56px; border:1px solid var(--card-border); border-radius:12px; background:var(--card-bg); padding:20px 24px;}
+.traj-readout{display:flex; gap:28px; font-size:12px; color:var(--ink-faint); margin-bottom:10px;}
+.traj-readout b{color:var(--teal); font-weight:400;}
+#traj-svg{width:100%; height:auto; display:block;}
+.traj-path{fill:none; stroke:var(--ink-faint); stroke-width:1.5; stroke-dasharray:4 5;}
+.traj-dot{fill:var(--chalk-yellow);}
+.traj-axis{stroke:var(--card-border); stroke-width:1;}
+
+/* SECTION HEADERS */
+.section{padding:64px 24px;}
+.section-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:28px; flex-wrap:wrap; gap:8px;}
+.section-head h2{font-size:20px; font-weight:700; margin:0;}
+.section-head .count{font-size:12px; color:var(--ink-faint);}
+
+/* TOPIC GRID */
+.topics{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px;}
+@media(max-width:720px){.topics{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:480px){.topics{grid-template-columns:1fr;}}
+.topic-card{
+  background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--radius);
+  padding:20px; cursor:pointer; position:relative; overflow:hidden;
+  transition:transform .18s ease, border-color .18s ease;
+}
+.topic-card:hover{transform:translateY(-3px); border-color:var(--ink-faint);}
+.topic-card .num{
+  position:absolute; top:14px; right:16px; font-size:11px; color:var(--ink-faint);
+}
+.topic-card .icon{font-size:22px; margin-bottom:14px; display:block;}
+.topic-card h3{font-size:15px; font-weight:700; margin:0 0 6px; line-height:1.35;}
+.topic-card p{font-size:12.5px; color:var(--ink-dim); margin:0; font-family:'Literata',serif; line-height:1.5;}
+.topic-card .arrow{margin-top:14px; font-size:12px; color:var(--teal); display:flex; align-items:center; gap:5px;}
+
+/* DETAIL VIEW */
+#detail-view{display:none;}
+.back-link{
+  display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-dim);
+  background:none; border:none; cursor:pointer; padding:0; margin-bottom:20px;
+}
+.back-link:hover{color:var(--ink);}
+.detail-title{font-size:26px; font-weight:700; margin:0 0 6px;}
+.detail-sub{font-size:13px; color:var(--ink-faint); margin:0 0 32px;}
+
+.cat-grid{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px;}
+@media(max-width:600px){.cat-grid{grid-template-columns:1fr;}}
+.cat-card{
+  background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--radius);
+  overflow:hidden; transition:transform .18s ease, border-color .18s ease; cursor:pointer;
+}
+.cat-card:hover{transform:translateY(-3px); border-color:var(--ink-faint);}
+.cat-head{
+  padding:18px 20px; cursor:pointer; display:flex; align-items:center; justify-content:space-between;
+}
+#category-page, #exercises-page, #about-page{display:none;}
+.cat-page-eyebrow{font-size:12px; color:var(--teal); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px;}
+.ex-topic-group{margin-bottom:28px;}
+.ex-topic-group h4{font-size:14px; margin:0 0 10px; color:var(--ink-dim);}
+.cat-head-left{display:flex; align-items:center; gap:12px;}
+.cat-icon{width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;}
+.cat-icon.formula{background:rgba(95,180,162,0.15); color:var(--teal);}
+.cat-icon.text{background:rgba(242,201,76,0.15); color:var(--chalk-yellow);}
+.cat-icon.video{background:rgba(224,138,107,0.15); color:var(--coral);}
+.cat-icon.exercise{background:rgba(174,161,255,0.15); color:#b3a8ec;}
+.cat-head h4{font-size:14.5px; font-weight:700; margin:0 0 2px;}
+.cat-head p{font-size:11.5px; color:var(--ink-faint); margin:0;}
+.chevron{font-size:12px; color:var(--ink-faint); transition:transform .2s;}
+.cat-card.open .chevron{transform:rotate(180deg);}
+.cat-body{max-height:0; overflow:hidden; transition:max-height .3s ease; border-top:1px solid transparent;}
+.cat-card.open .cat-body{border-top:1px solid var(--card-border);}
+.cat-body-inner{padding:20px;}
+
+/* formula sim */
+.sim-row{display:flex; align-items:center; gap:12px; margin-bottom:14px; font-size:13px;}
+.sim-row label{width:70px; color:var(--ink-dim); flex-shrink:0;}
+.sim-row input[type=range]{flex:1; accent-color:var(--teal);}
+.sim-row .val{width:60px; text-align:right; color:var(--teal);}
+.sim-formula{
+  background:var(--bg-alt); border:1px solid var(--card-border); border-radius:8px;
+  padding:14px 16px; font-size:15px; text-align:center; margin:14px 0; color:var(--chalk-yellow);
+}
+canvas#sim-canvas{width:100%; height:140px; display:block; background:var(--bg-alt); border-radius:8px; margin-top:6px;}
+
+/* explanation accordion */
+.explain-item{border-bottom:1px solid var(--card-border); padding:12px 0;}
+.explain-item:last-child{border-bottom:none;}
+.explain-item summary{cursor:pointer; font-size:13.5px; font-weight:700; list-style:none; display:flex; justify-content:space-between;}
+.explain-item summary::-webkit-details-marker{display:none;}
+.explain-item p{font-size:14px; line-height:1.7; color:var(--ink-dim); margin:10px 0 0; font-family:'Literata',serif;}
+
+/* video grid */
+.video-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px;}
+@media(max-width:500px){.video-grid{grid-template-columns:1fr;}}
+.video-item{background:var(--bg-alt); border-radius:8px; overflow:hidden; cursor:pointer; border:1px solid var(--card-border);}
+.video-thumb{aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; position:relative; background:linear-gradient(135deg, rgba(224,138,107,0.12), rgba(224,138,107,0.03));}
+.play-btn{width:36px; height:36px; border-radius:50%; background:var(--coral); display:flex; align-items:center; justify-content:center; color:#1a1408; font-size:13px;}
+.video-item .vlabel{padding:10px 12px; font-size:12px; color:var(--ink-dim);}
+
+/* exercises */
+.ex-item{border:1px solid var(--card-border); border-radius:8px; padding:14px 16px; margin-bottom:10px;}
+.ex-item:last-child{margin-bottom:0;}
+.ex-q{font-size:13.5px; margin:0 0 10px;}
+.ex-row{display:flex; gap:8px;}
+.ex-row input[type=text]{
+  flex:1; background:var(--bg-alt); border:1px solid var(--card-border); border-radius:6px;
+  color:var(--ink); padding:8px 10px; font-size:13px; font-family:'Space Mono',monospace;
+}
+.ex-row button{font-size:12px; padding:8px 14px;}
+.ex-feedback{font-size:12px; margin-top:8px; display:none;}
+.ex-feedback.correct{color:var(--teal); display:block;}
+.ex-feedback.wrong{color:var(--coral); display:block;}
+
+footer{padding:40px 24px; border-top:1px solid var(--card-border); text-align:center; font-size:11.5px; color:var(--ink-faint);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span class="logo-dot"></span>quanta</div>
+  <div class="nav-links">
+    <span class="nav-link">õppetunnid</span>
+    <span class="nav-link">ülesanded</span>
+    <span class="nav-link">meist</span>
+  </div>
+</nav>
+
+<section class="hero wrap">
+  <div class="eyebrow">gümnaasiumi füüsika</div>
+  <h1 class="headline">Füüsika peidab end<br>igas <em>liikumises.</em><br>Õpi seda nägema.</h1>
+  <p class="sub">Kuus teemat, iga tund neljas vaates — valemid ja simulatsioonid, selgitused, videod ning ülesanded. Vali teema ja alusta.</p>
+  <div class="hero-cta">
+    <button class="btn primary" onclick="document.getElementById('topics-section').scrollIntoView()">Vali teema</button>
+  </div>
+
+  <div class="traj-wrap">
+    <div class="traj-readout">
+      <span>t = <b id="ro-t">0.0</b> s</span>
+      <span>v = <b id="ro-v">0.0</b> m/s</span>
+      <span>s = <b id="ro-s">0.0</b> m</span>
+    </div>
+    <svg id="traj-svg" viewBox="0 0 880 160">
+      <line class="traj-axis" x1="0" y1="140" x2="880" y2="140"></line>
+      <path class="traj-path" d="M 20 130 Q 440 -10 860 130"></path>
+      <circle class="traj-dot" id="traj-dot" cx="20" cy="130" r="5"></circle>
+    </svg>
+  </div>
+</section>
+
+<section class="section wrap" id="topics-section">
+  <div class="section-head">
+    <h2>Teemad</h2>
+    <span class="count">6 teemat · 51 tundi</span>
+  </div>
+  <div class="topics" id="topic-grid"></div>
+</section>
+
+<section class="section wrap" id="detail-view">
+  <button class="back-link" onclick="goHome()">← kõik teemad</button>
+  <h2 class="detail-title" id="detail-title"></h2>
+  <p class="detail-sub" id="detail-sub"></p>
+  <div class="cat-grid" id="cat-grid"></div>
+</section>
+
+<section class="section wrap" id="category-page">
+  <button class="back-link" id="cat-back-link">← tagasi teema juurde</button>
+  <div class="cat-page-eyebrow" id="cat-page-eyebrow"></div>
+  <h2 class="detail-title" id="cat-page-title"></h2>
+  <p class="detail-sub" id="cat-page-sub"></p>
+  <div id="cat-page-content"></div>
+</section>
+
+<section class="section wrap" id="exercises-page">
+  <button class="back-link" onclick="goHome()">← õppetunnid</button>
+  <h2 class="detail-title">Kõik ülesanded</h2>
+  <p class="detail-sub">Kogu harjutuste pank ühes kohas, teema kaupa.</p>
+  <div id="all-exercises"></div>
+</section>
+
+<section class="section wrap" id="about-page">
+  <button class="back-link" onclick="goHome()">← õppetunnid</button>
+  <h2 class="detail-title">Meist</h2>
+  <p class="detail-sub"></p>
+  <p style="font-size:15px; line-height:1.8; color:var(--ink-dim); max-width:560px;">
+    Quanta on gümnaasiumi füüsika õppimise koht, kus iga teema jaguneb neljaks: valemid ja simulatsioonid, selgitused, videod ning ülesanded. Eesmärk on aidata mõista, mitte pähe õppida.
+  </p>
+</section>
+
+<footer>quanta — füüsika õppimine, ilma peast tuupimiseta</footer>
+
+<script>
+const topics = [
+  {name:"Sissejuhatus füüsikasse", tag:"Mõõtühikud ja suurused", icon:"◎", lessons:12,
+    exercises:[{q:'Teisenda 3,5 km meetriteks.', a:'3500'},{q:'Mitu sekundit on 2 minutis?', a:'120'}]},
+  {name:"Kinemaatika", tag:"Kiirus, kiirendus, graafikud", icon:"→", lessons:12,
+    exercises:[{q:'Auto liigub kiirusega 20 m/s. Mitu meetrit läbib ta 5 sekundiga?', a:'100'},{q:'Kui teekond on 60 m ja aeg 12 s, mitu m/s on kiirus?', a:'5'}]},
+  {name:"Ringliikumine", tag:"Nurkkiirus ja tsentripetaaljõud", icon:"↻", lessons:6,
+    exercises:[{q:'Ketas teeb 2 pööret sekundis. Mitu pööret 10 sekundiga?', a:'20'}]},
+  {name:"Vastastikmõju ja jõud", tag:"Newtoni seadused", icon:"⇄", lessons:8,
+    exercises:[{q:'Keha mass on 5 kg, kiirendus 2 m/s². Kui suur on jõud (N)?', a:'10'}]},
+  {name:"Jäävusseadused", tag:"Energia ja impulss", icon:"⚖", lessons:6,
+    exercises:[{q:'Keha mass 2 kg liigub kiirusega 3 m/s. Kui suur on impulss (kg·m/s)?', a:'6'}]},
+  {name:"Perioodilised liikumised", tag:"Võnkumised ja lained", icon:"∿", lessons:7,
+    exercises:[{q:'Võnkumise sagedus on 5 Hz. Kui pikk on periood (s)?', a:'0.2'}]}
+];
+
+const grid = document.getElementById('topic-grid');
+topics.forEach((t,i)=>{
+  const c = document.createElement('div');
+  c.className = 'topic-card';
+  c.innerHTML = `<span class="num">0${i+1}</span>
+    <span class="icon">${t.icon}</span>
+    <h3>${t.name}</h3>
+    <p>${t.tag}</p>`;
+  c.addEventListener('click', (e)=>{ e.preventDefault(); });
+  grid.appendChild(c);
+});
+
+function openTopic(i){
+  currentTopicIndex = i;
+  const t = topics[i];
+  hideAllViews();
+  document.getElementById('detail-view').style.display = 'block';
+  document.getElementById('detail-title').textContent = t.name;
+  document.getElementById('detail-sub').textContent = t.tag + ' · ' + t.lessons + ' tundi';
+  buildCategories(t);
+  window.scrollTo({top:0});
+}
+function goHome(){
+  hideAllViews();
+  document.querySelector('.hero').style.display = 'block';
+  document.getElementById('topics-section').style.display = 'block';
+  window.scrollTo({top:0});
+}
+
+const categories = [
+  {key:'formula', icon:'ƒ', cls:'formula', title:'Valemid ja simulatsioonid', sub:'Interaktiivne arvutaja'},
+  {key:'explain', icon:'§', cls:'text', title:'Selgitused', sub:'Teooria lühidalt'},
+  {key:'video', icon:'▶', cls:'video', title:'Videod', sub:'Lühikesed videotunnid'},
+  {key:'exercise', icon:'✓', cls:'exercise', title:'Ülesanded', sub:'Kontrolli oma teadmisi'}
+];
+
+let currentTopicIndex = 0;
+
+function buildCategories(t){
+  const catGrid = document.getElementById('cat-grid');
+  catGrid.innerHTML = '';
+  categories.forEach(c=>{
+    const card = document.createElement('div');
+    card.className = 'cat-card';
+    card.innerHTML = `<div class="cat-head">
+      <div class="cat-head-left"><div class="cat-icon ${c.cls}">${c.icon}</div><div><h4>${c.title}</h4><p>${c.sub}</p></div></div>
+      <span class="chevron" style="transform:rotate(-90deg);">⌄</span>
+    </div>`;
+    card.addEventListener('click', ()=>openCategoryPage(currentTopicIndex, c.key));
+    catGrid.appendChild(card);
+  });
+}
+
+function openCategoryPage(topicIndex, catKey){
+  currentTopicIndex = topicIndex;
+  const t = topics[topicIndex];
+  const cat = categories.find(c=>c.key===catKey);
+  hideAllViews();
+  document.getElementById('category-page').style.display = 'block';
+  document.getElementById('cat-page-eyebrow').textContent = t.name;
+  document.getElementById('cat-page-title').textContent = cat.title;
+  document.getElementById('cat-page-sub').textContent = cat.sub;
+  document.getElementById('cat-back-link').onclick = ()=>{ hideAllViews(); document.getElementById('detail-view').style.display='block'; window.scrollTo({top:0}); };
+
+  const content = document.getElementById('cat-page-content');
+  if(catKey==='formula'){
+    content.innerHTML = `
+      <div class="sim-row"><label>kiirus v</label><input type="range" id="sim-v" min="1" max="30" value="10" oninput="runSim()"><span class="val" id="sim-v-out">10 m/s</span></div>
+      <div class="sim-row"><label>aeg t</label><input type="range" id="sim-t" min="1" max="20" value="5" oninput="runSim()"><span class="val" id="sim-t-out">5 s</span></div>
+      <div class="sim-formula" id="sim-formula">s = v · t = 50 m</div>
+      <canvas id="sim-canvas"></canvas>
+      <p style="font-size:13px; color:var(--ink-faint); margin-top:14px;">Liiguta liugureid ja jälgi, kuidas teekond s muutub ajas — graafik joonistub reaalajas.</p>`;
+    runSim();
+  } else if(catKey==='explain'){
+    content.innerHTML = `
+      <details class="explain-item" open><summary>Mis on ${t.name.toLowerCase()}? <span>+</span></summary><p>Selles peatükis vaatame nähtust selle põhiomaduste kaudu ja seome selle igapäevaste näidetega, enne kui liigume valemite juurde.</p></details>
+      <details class="explain-item"><summary>Peamised valemid <span>+</span></summary><p>Iga valem on tuletatud lihtsamatest suurustest ja seda saab valemite lehel ise katsetada.</p></details>
+      <details class="explain-item"><summary>Levinud vead <span>+</span></summary><p>Tähelepanu tasub pöörata ühikutele ja märkidele — need on kõige sagedasem eksimuskoht kontrolltöödes.</p></details>
+      <details class="explain-item"><summary>Kokkuvõte <span>+</span></summary><p>Enne järgmise tunni juurde minekut veendu, et suudad selgitada peamised mõisted oma sõnadega.</p></details>`;
+  } else if(catKey==='video'){
+    content.innerHTML = `<div class="video-grid" id="video-grid"></div>`;
+    const vids = document.getElementById('video-grid');
+    ['Sissejuhatav loeng','Näidisülesanne koos lahenduskäiguga','Kordamine ja kokkuvõte'].forEach(v=>{
+      const item = document.createElement('div');
+      item.className = 'video-item';
+      item.innerHTML = `<div class="video-thumb"><div class="play-btn">▶</div></div><div class="vlabel">${v}</div>`;
+      item.addEventListener('click', ()=>window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(t.name+' füüsika'), '_blank'));
+      vids.appendChild(item);
+    });
+  } else if(catKey==='exercise'){
+    content.innerHTML = `<div id="ex-list"></div>`;
+    renderExerciseList(document.getElementById('ex-list'), t.exercises, 'p'+topicIndex+'-');
+  }
+  window.scrollTo({top:0});
+}
+
+function renderExerciseList(container, exercises, prefix){
+  exercises.forEach((ex,i)=>{
+    const item = document.createElement('div');
+    item.className = 'ex-item';
+    item.innerHTML = `<p class="ex-q">${i+1}. ${ex.q}</p>
+      <div class="ex-row"><input type="text" placeholder="vastus" id="${prefix}ex-input-${i}"><button class="btn" onclick="checkEx('${prefix}', ${i}, '${ex.a}')">Kontrolli</button></div>
+      <p class="ex-feedback" id="${prefix}ex-fb-${i}"></p>`;
+    container.appendChild(item);
+  });
+}
+
+function hideAllViews(){
+  document.querySelector('.hero').style.display = 'none';
+  document.getElementById('topics-section').style.display = 'none';
+  document.getElementById('detail-view').style.display = 'none';
+  document.getElementById('category-page').style.display = 'none';
+  document.getElementById('exercises-page').style.display = 'none';
+  document.getElementById('about-page').style.display = 'none';
+}
+
+function openExercisesPage(){
+  hideAllViews();
+  document.getElementById('exercises-page').style.display = 'block';
+  const wrap = document.getElementById('all-exercises');
+  wrap.innerHTML = '';
+  topics.forEach((t,ti)=>{
+    const group = document.createElement('div');
+    group.className = 'ex-topic-group';
+    group.innerHTML = `<h4>${t.name}</h4>`;
+    wrap.appendChild(group);
+    renderExerciseList(group, t.exercises, 'a'+ti+'-');
+  });
+  window.scrollTo({top:0});
+}
+
+function openAboutPage(){
+  hideAllViews();
+  document.getElementById('about-page').style.display = 'block';
+  window.scrollTo({top:0});
+}
+
+function runSim(){
+  const v = parseFloat(document.getElementById('sim-v').value);
+  const t = parseFloat(document.getElementById('sim-t').value);
+  const s = Math.round(v*t);
+  document.getElementById('sim-v-out').textContent = v + ' m/s';
+  document.getElementById('sim-t-out').textContent = t + ' s';
+  document.getElementById('sim-formula').textContent = `s = v · t = ${s} m`;
+
+  const canvas = document.getElementById('sim-canvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.clientWidth || 300, h = 140;
+  canvas.width = w; canvas.height = h;
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle = '#5fb4a2';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  const maxS = 30*20;
+  for(let x=0; x<=w; x+=4){
+    const tt = (x/w)*t;
+    const ss = v*tt;
+    const y = h-10 - (ss/maxS)*(h-20)*4;
+    if(x===0) ctx.moveTo(x, Math.max(10,y)); else ctx.lineTo(x, Math.max(10,y));
+  }
+  ctx.stroke();
+}
+
+function checkEx(prefix, i, answer){
+  const input = document.getElementById(prefix+'ex-input-'+i).value.trim().replace(',', '.');
+  const fb = document.getElementById(prefix+'ex-fb-'+i);
+  if(input === answer){
+    fb.textContent = 'Õige!';
+    fb.className = 'ex-feedback correct';
+  } else {
+    fb.textContent = 'Proovi uuesti — kontrolli ühikuid ja arvutuskäiku.';
+    fb.className = 'ex-feedback wrong';
+  }
+}
+
+/* hero trajectory animation */
+(function(){
+  const path = document.querySelector('.traj-path');
+  const dot = document.getElementById('traj-dot');
+  const len = path.getTotalLength();
+  let start = null;
+  const duration = 3200;
+  function frame(ts){
+    if(!start) start = ts;
+    let progress = ((ts-start) % duration)/duration;
+    const pt = path.getPointAtLength(progress*len);
+    dot.setAttribute('cx', pt.x);
+    dot.setAttribute('cy', pt.y);
+    document.getElementById('ro-t').textContent = (progress*4).toFixed(1);
+    document.getElementById('ro-v').textContent = (12 - Math.abs(progress-0.5)*10).toFixed(1);
+    document.getElementById('ro-s').textContent = (progress*40).toFixed(1);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
