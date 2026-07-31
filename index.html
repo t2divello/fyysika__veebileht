@@ -65,6 +65,8 @@ nav{
 
 /* HERO */
 .hero{padding:90px 24px 60px; position:relative; overflow:hidden;}
+#field-canvas{position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none;}
+.hero > *:not(#field-canvas){position:relative; z-index:1;}
 .eyebrow{
   font-size:12px; color:var(--teal); letter-spacing:1.5px; text-transform:uppercase;
   display:flex; align-items:center; gap:10px; margin-bottom:22px;
@@ -102,15 +104,16 @@ h1.headline{
 .section-head .count{font-size:12px; color:var(--ink-faint);}
 
 /* TOPIC GRID */
-.topics{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px;}
+.topics{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px; perspective:900px;}
 @media(max-width:720px){.topics{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(max-width:480px){.topics{grid-template-columns:1fr;}}
 .topic-card{
   background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--radius);
   padding:20px; cursor:pointer; position:relative; overflow:hidden;
-  transition:transform .18s ease, border-color .18s ease;
+  transition:transform .15s ease-out, border-color .18s ease;
+  transform-style:preserve-3d; will-change:transform;
 }
-.topic-card:hover{transform:translateY(-3px); border-color:var(--ink-faint);}
+.topic-card:hover{border-color:var(--ink-faint);}
 .topic-card .num{
   position:absolute; top:14px; right:16px; font-size:11px; color:var(--ink-faint);
 }
@@ -214,6 +217,7 @@ footer{padding:40px 24px; border-top:1px solid var(--card-border); text-align:ce
 </nav>
 
 <section class="hero wrap">
+  <canvas id="field-canvas"></canvas>
   <div class="eyebrow">gümnaasiumi füüsika</div>
   <h1 class="headline">Füüsika peidab end<br>igas <em>liikumises.</em><br>Õpi seda nägema.</h1>
   <p class="sub">Kuus teemat, iga tund neljas vaates — valemid ja simulatsioonid, selgitused, videod ning ülesanded. Vali teema ja alusta.</p>
@@ -301,6 +305,15 @@ topics.forEach((t,i)=>{
     <h3>${t.name}</h3>
     <p>${t.tag}</p>`;
   c.addEventListener('click', (e)=>{ e.preventDefault(); });
+  c.addEventListener('mousemove', (e)=>{
+    const r = c.getBoundingClientRect();
+    const px = (e.clientX - r.left)/r.width - 0.5;
+    const py = (e.clientY - r.top)/r.height - 0.5;
+    c.style.transform = `translateY(-3px) rotateY(${px*14}deg) rotateX(${-py*14}deg)`;
+  });
+  c.addEventListener('mouseleave', ()=>{
+    c.style.transform = 'translateY(0) rotateY(0) rotateX(0)';
+  });
   grid.appendChild(c);
 });
 
@@ -466,6 +479,77 @@ function checkEx(prefix, i, answer){
     fb.className = 'ex-feedback wrong';
   }
 }
+
+/* ambient particle field behind hero, now cursor-reactive */
+(function(){
+  const canvas = document.getElementById('field-canvas');
+  const ctx = canvas.getContext('2d');
+  const hero = document.querySelector('.hero');
+  let w, h, particles;
+  const mouse = {x:-9999, y:-9999};
+
+  function resize(){
+    w = canvas.width = hero.clientWidth;
+    h = canvas.height = hero.clientHeight;
+  }
+
+  function initParticles(){
+    const count = Math.max(18, Math.floor((w*h)/32000));
+    particles = Array.from({length:count}, ()=>{
+      const x = Math.random()*w, y = Math.random()*h;
+      return {x, y, ox:x, oy:y, vx:(Math.random()-0.5)*0.25, vy:(Math.random()-0.5)*0.25};
+    });
+  }
+
+  resize();
+  initParticles();
+  window.addEventListener('resize', ()=>{ resize(); initParticles(); });
+  hero.addEventListener('mousemove', e=>{
+    const r = hero.getBoundingClientRect();
+    mouse.x = e.clientX - r.left;
+    mouse.y = e.clientY - r.top;
+  });
+  hero.addEventListener('mouseleave', ()=>{ mouse.x = -9999; mouse.y = -9999; });
+
+  function step(){
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p=>{
+      const dx = p.x-mouse.x, dy = p.y-mouse.y;
+      const dist = Math.sqrt(dx*dx+dy*dy);
+      if(dist < 110){
+        const f = (110-dist)/110;
+        p.vx += (dx/dist)*f*0.6;
+        p.vy += (dy/dist)*f*0.6;
+      }
+      p.vx += (p.ox-p.x)*0.002;
+      p.vy += (p.oy-p.y)*0.002;
+      p.vx *= 0.94; p.vy *= 0.94;
+      p.x += p.vx; p.y += p.vy;
+    });
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const a = particles[i], b = particles[j];
+        const dx = a.x-b.x, dy = a.y-b.y;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        if(dist < 140){
+          ctx.strokeStyle = `rgba(95,180,162,${0.12*(1-dist/140)})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+          ctx.stroke();
+        }
+      }
+    }
+    particles.forEach(p=>{
+      ctx.fillStyle = 'rgba(242,201,76,0.35)';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.6, 0, Math.PI*2);
+      ctx.fill();
+    });
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+})();
 
 /* hero trajectory animation */
 (function(){
