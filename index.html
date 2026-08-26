@@ -186,7 +186,26 @@ h1.headline{
 }
 canvas#sim-canvas{width:100%; height:140px; display:block; background:var(--bg-alt); border-radius:8px; margin-top:6px;}
 
-.msim-block{margin-bottom:28px;}
+/* measurement simulators (Sissejuhatus füüsikasse) — card background echoes the
+   hero/category starfield feel (soft dark gradient + faint colored glows),
+   but with its own angle and glow placement so it isn't a copy-paste. */
+.msim-block{
+  margin-bottom:28px;
+  padding:18px;
+  border:1px solid var(--card-border);
+  border-radius:10px;
+  background:linear-gradient(200deg, rgba(20,31,42,0.82) 0%, rgba(16,25,34,0.55) 55%, rgba(15,23,32,0.3) 100%);
+  position:relative;
+  overflow:hidden;
+}
+.msim-block::before{
+  content:"";
+  position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(242,201,76,0.09), transparent 34%),
+    radial-gradient(circle at 85% 82%, rgba(95,180,162,0.10), transparent 30%);
+}
+.msim-block > *{position:relative; z-index:1;}
 .msim-block:last-child{margin-bottom:0;}
 .msim-block h5{font-size:13.5px; font-weight:700; margin:0 0 12px; color:var(--ink);}
 .msim-result{font-size:14px; color:var(--teal); font-family:'Space Mono',monospace; margin:10px 0;}
@@ -268,7 +287,7 @@ footer{padding:40px 24px; border-top:1px solid var(--card-border); text-align:ce
     <div class="traj-view active" id="view-parabola">
       <div class="traj-readout">
         <span>t = <b id="ro-t">0.0</b> s</span>
-        <span>v = <b id="ro-v">0.0</b> m/s</span>
+        <span>v = <b id="ro-v">0.0</b> m:s</span>
         <span>s = <b id="ro-s">0.0</b> m</span>
       </div>
       <svg id="traj-svg" viewBox="0 0 880 160">
@@ -282,7 +301,7 @@ footer{padding:40px 24px; border-top:1px solid var(--card-border); text-align:ce
       <div class="traj-readout">
         <span>t = <b id="ro-osc-t">0.0</b> s</span>
         <span>x = <b id="ro-osc-x">0.0</b> m</span>
-        <span>v = <b id="ro-osc-v">0.0</b> m/s</span>
+        <span>v = <b id="ro-osc-v">0.0</b> m:s</span>
       </div>
       <svg id="osc-svg" viewBox="0 0 880 160">
         <line class="traj-axis" x1="0" y1="80" x2="880" y2="80"></line>
@@ -295,8 +314,8 @@ footer{padding:40px 24px; border-top:1px solid var(--card-border); text-align:ce
     <div class="traj-view" id="view-circular">
       <div class="traj-readout">
         <span>t = <b id="ro-circ-t">0.0</b> s</span>
-        <span>ω = <b id="ro-circ-w">0.0</b> rad/s</span>
-        <span>v = <b id="ro-circ-v">0.0</b> m/s</span>
+        <span>ω = <b id="ro-circ-w">0.0</b> rad:s</span>
+        <span>v = <b id="ro-circ-v">0.0</b> m:s</span>
       </div>
       <svg id="circ-svg" viewBox="0 0 880 160">
         <circle class="traj-path" cx="440" cy="80" r="60" style="stroke-dasharray:4 5;"></circle>
@@ -370,7 +389,7 @@ const topics = [
 
       <div class="msim-block">
         <h5>Suhteline viga</h5>
-        <div class="sim-formula" style="font-size:14px;">suhteline viga = (absoluutne viga / väärtus) × 100%</div>
+        <div class="sim-formula" style="font-size:14px;">suhteline viga = (absoluutne viga : väärtus) × 100%</div>
         <div class="sim-row"><label>väärtus</label><input type="range" id="msim-rv" min="1" max="200" value="10" oninput="msimUpdate2()"><span class="val" id="msim-rv-out">10</span></div>
         <div class="sim-row"><label>abs. viga</label><input type="range" id="msim-re" min="0.1" max="20" step="0.1" value="1" oninput="msimUpdate2()"><span class="val" id="msim-re-out">1.0</span></div>
         <div class="msim-result" id="msim-result2"></div>
@@ -394,6 +413,13 @@ const topics = [
         <div class="msim-measure-row" id="msim-measurements"></div>
         <p class="msim-note"><b style="color:var(--ink);">Juhuslik viga</b> hajutab tulemusi eri suundades. <b style="color:var(--ink);">Süstemaatiline viga</b> nihutab tulemusi pidevalt samas suunas.</p>
       </div>
+
+      <div class="msim-block">
+        <h5>Aritmeetiline keskmine ja standardhälve</h5>
+        <div class="sim-formula" style="font-size:15px;">x̄ = (x₁ + x₂ + ... + xₙ) : n = Σxᵢ : n</div>
+        <div class="sim-formula" style="font-size:15px;">sₓ = √( Σ(xᵢ − x̄)² : (n − 1) )</div>
+        <p class="msim-note">Mitme mõõtmise korral annab <b style="color:var(--ink);">aritmeetiline keskmine (x̄)</b> usaldusväärseima hinnangu tegelikule väärtusele. <b style="color:var(--ink);">Standardhälve (sₓ)</b> näitab, kui palju tulemused keskmisest hajuvad, mida väiksem sₓ, seda täpsemad mõõtmised.</p>
+      </div>
     `,
     formulaInit:initMeasurementSims,
     exercises:[
@@ -403,7 +429,7 @@ const topics = [
       {q:'Toote reklaamis puuduvad viited teadusuuringutele, tuuakse ainult üksikute kasutajate kommentaare. Kas see on tugev teaduslik tõend? (vasta "jah" või "ei")', a:'ei'},
       {q:'Pikkuseks mõõdeti 15,4 cm täpsusega ± 0,2 cm. Milline on suurim võimalik tegelik pikkus (cm)?', a:'15.6'},
       {q:'Mõõdetud väärtus on 40 ja absoluutne viga 2. Mitu protsenti on suhteline viga?', a:'5'},
-      {q:'Kas kiiruse arvutamine valemiga v = s/t on otsemõõtmine või kaudmõõtmine?', a:'kaudmõõtmine'},
+      {q:'Kas kiiruse arvutamine valemiga v = s:t on otsemõõtmine või kaudmõõtmine?', a:'kaudmõõtmine'},
       {q:'Mis on massi SI põhiühik?', a:'kilogramm'},
       {q:'Kaal näitab alati 0,5 kg rohkem kui tegelik mass. Kas see on juhuslik või süstemaatiline viga?', a:'süstemaatiline'},
       {q:'Mis on aja SI põhiühik?', a:'sekund'}
@@ -425,7 +451,7 @@ const topics = [
       </details>
 
       <details class="explain-item"><summary>Mõõtmine ja SI-süsteem <span>+</span></summary>
-        <p><b>Mõõtmine</b> on füüsikalise suuruse väärtuse võrdlemine kokkulepitud mõõtühikuga. Mõõtmised jagunevad kaheks: <b>otsemõõtmine</b>, kus tulemus loetakse otse mõõteriista skaalalt (nt pikkus joonlauaga), ja <b>kaudmõõtmine</b>, kus tulemus arvutatakse teiste mõõdetud suuruste kaudu (nt v = s/t).</p>
+        <p><b>Mõõtmine</b> on füüsikalise suuruse väärtuse võrdlemine kokkulepitud mõõtühikuga. Mõõtmised jagunevad kaheks: <b>otsemõõtmine</b>, kus tulemus loetakse otse mõõteriista skaalalt (nt pikkus joonlauaga), ja <b>kaudmõõtmine</b>, kus tulemus arvutatakse teiste mõõdetud suuruste kaudu (nt v = s:t).</p>
         <p>Mõõtühik peab olema kõigile üheselt teada ja kokkuleppeline. Vanasti kasutati kehaosi (vaks, küünar, jalg), kuid need erinesid inimeseti. Tänapäeval kehtib rahvusvaheline <b>SI-süsteem</b> seitsme põhisuurusega:</p>
         <table style="width:100%; font-size:13px; border-collapse:collapse; margin-top:8px;">
           <tr style="color:var(--ink-faint); text-align:left;"><th style="padding:4px 0; font-weight:500;">Põhisuurus</th><th style="font-weight:500;">Põhiühik</th></tr>
@@ -473,13 +499,13 @@ const topics = [
       </details>
     `},
   {name:"Kinemaatika", tag:"Kiirus, kiirendus, graafikud", icon:"→", lessons:12,
-    exercises:[{q:'Auto liigub kiirusega 20 m/s. Mitu meetrit läbib ta 5 sekundiga?', a:'100'},{q:'Kui teekond on 60 m ja aeg 12 s, mitu m/s on kiirus?', a:'5'}]},
+    exercises:[{q:'Auto liigub kiirusega 20 m:s. Mitu meetrit läbib ta 5 sekundiga?', a:'100'},{q:'Kui teekond on 60 m ja aeg 12 s, mitu m:s on kiirus?', a:'5'}]},
   {name:"Ringliikumine", tag:"Nurkkiirus ja tsentripetaaljõud", icon:"↻", lessons:6,
     exercises:[{q:'Ketas teeb 2 pööret sekundis. Mitu pööret 10 sekundiga?', a:'20'}]},
   {name:"Vastastikmõju ja jõud", tag:"Newtoni seadused", icon:"⇄", lessons:8,
-    exercises:[{q:'Keha mass on 5 kg, kiirendus 2 m/s². Kui suur on jõud (N)?', a:'10'}]},
+    exercises:[{q:'Keha mass on 5 kg, kiirendus 2 m:s². Kui suur on jõud (N)?', a:'10'}]},
   {name:"Jäävusseadused", tag:"Energia ja impulss", icon:"⚖", lessons:6,
-    exercises:[{q:'Keha mass 2 kg liigub kiirusega 3 m/s. Kui suur on impulss (kg·m/s)?', a:'6'}]},
+    exercises:[{q:'Keha mass 2 kg liigub kiirusega 3 m:s. Kui suur on impulss (kg·m:s)?', a:'6'}]},
   {name:"Perioodilised liikumised", tag:"Võnkumised ja lained", icon:"∿", lessons:7,
     exercises:[{q:'Võnkumise sagedus on 5 Hz. Kui pikk on periood (s)?', a:'0.2'}]}
 ];
@@ -566,7 +592,7 @@ function openCategoryPage(topicIndex, catKey){
       if(t.formulaInit) t.formulaInit();
     } else {
       content.innerHTML = `
-        <div class="sim-row"><label>kiirus v</label><input type="range" id="sim-v" min="1" max="30" value="10" oninput="runSim()"><span class="val" id="sim-v-out">10 m/s</span></div>
+        <div class="sim-row"><label>kiirus v</label><input type="range" id="sim-v" min="1" max="30" value="10" oninput="runSim()"><span class="val" id="sim-v-out">10 m:s</span></div>
         <div class="sim-row"><label>aeg t</label><input type="range" id="sim-t" min="1" max="20" value="5" oninput="runSim()"><span class="val" id="sim-t-out">5 s</span></div>
         <div class="sim-formula" id="sim-formula">s = v · t = 50 m</div>
         <canvas id="sim-canvas"></canvas>
@@ -697,7 +723,7 @@ function runSim(){
   const v = parseFloat(document.getElementById('sim-v').value);
   const t = parseFloat(document.getElementById('sim-t').value);
   const s = Math.round(v*t);
-  document.getElementById('sim-v-out').textContent = v + ' m/s';
+  document.getElementById('sim-v-out').textContent = v + ' m:s';
   document.getElementById('sim-t-out').textContent = t + ' s';
   document.getElementById('sim-formula').textContent = `s = v · t = ${s} m`;
 
@@ -895,6 +921,7 @@ function checkEx(prefix, i, answer){
   requestAnimationFrame(step);
 })();
 
+/* subtle animated physics field behind simulation pages */
 (function(){
   const canvas=document.getElementById('category-field');
   if(!canvas) return;
@@ -944,6 +971,7 @@ function checkEx(prefix, i, answer){
   requestAnimationFrame(frame);
 })();
 
+/* hero demo tabs */
 (function(){
   const tabs = document.querySelectorAll('.traj-tab');
   const views = {
@@ -961,6 +989,7 @@ function checkEx(prefix, i, answer){
   });
 })();
 
+/* hero trajectory animation (parabola) */
 (function(){
   const path = document.querySelector('#traj-svg .traj-path');
   const dot = document.getElementById('traj-dot');
@@ -981,6 +1010,7 @@ function checkEx(prefix, i, answer){
   requestAnimationFrame(frame);
 })();
 
+/* oscillation animation (mass on a spring) */
 (function(){
   const dot = document.getElementById('osc-dot');
   const spring = document.getElementById('osc-spring');
@@ -1009,6 +1039,7 @@ function checkEx(prefix, i, answer){
   requestAnimationFrame(frame);
 })();
 
+/* circular motion animation */
 (function(){
   const dot = document.getElementById('circ-dot');
   const radiusLine = document.getElementById('circ-radius');
