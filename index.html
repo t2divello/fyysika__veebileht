@@ -43,14 +43,12 @@ h1,h2,h3,.mono,nav,.tag,.eyebrow,button,.btn{font-family:'Space Mono', monospace
 ::selection{background:var(--chalk-yellow); color:#141f2a;}
 a{color:inherit;}
 
-/* focus visibility */
 a:focus-visible, button:focus-visible, [tabindex]:focus-visible{
   outline:2px solid var(--chalk-yellow); outline-offset:3px; border-radius:4px;
 }
 
 .wrap{max-width:min(1180px, 92vw); margin:0 auto; padding:0 24px;}
 
-/* NAV */
 nav{
   position:sticky; top:0; z-index:50;
   backdrop-filter:blur(8px);
@@ -67,7 +65,6 @@ nav{
 .nav-link{cursor:pointer; transition:color .15s;}
 .nav-link:hover{color:var(--ink);}
 
-/* HERO */
 .hero{padding:90px 24px 60px; position:relative; overflow:hidden;}
 #field-canvas{position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none;}
 .hero-scrim{position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none;
@@ -94,7 +91,6 @@ h1.headline{
 .btn.primary{background:var(--chalk-yellow); color:#1a1408; border-color:var(--chalk-yellow); font-weight:700;}
 .btn.primary:hover{background:#f6d876;}
 
-/* trajectory demo svg */
 .traj-wrap{margin-top:56px; border:1px solid var(--card-border); border-radius:12px; background:var(--card-bg); padding:20px 24px;}
 .traj-tabs{display:flex; gap:8px; margin-bottom:16px;}
 .traj-tab{
@@ -113,13 +109,11 @@ h1.headline{
 .traj-dot{fill:var(--chalk-yellow);}
 .traj-axis{stroke:var(--card-border); stroke-width:1;}
 
-/* SECTION HEADERS */
 .section{padding:64px 24px;}
 .section-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:28px; flex-wrap:wrap; gap:8px;}
 .section-head h2{font-size:20px; font-weight:700; margin:0;}
 .section-head .count{font-size:12px; color:var(--ink-faint);}
 
-/* TOPIC GRID */
 .topics{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px; perspective:900px;}
 @media(max-width:720px){.topics{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(max-width:480px){.topics{grid-template-columns:1fr;}}
@@ -138,7 +132,6 @@ h1.headline{
 .topic-card p{font-size:12.5px; color:var(--ink-dim); margin:0; font-family:'Literata',serif; line-height:1.5;}
 .topic-card .arrow{margin-top:14px; font-size:12px; color:var(--teal); display:flex; align-items:center; gap:5px;}
 
-/* DETAIL VIEW */
 #detail-view{display:none;}
 .back-link{
   display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-dim);
@@ -160,12 +153,12 @@ h1.headline{
 }
 #category-page, #exercises-page, #about-page{display:none;}
 
-/* animated physics field behind topic simulations */
 #category-page{position:relative; overflow:hidden; isolation:isolate;}
 #category-field{position:absolute; inset:0; width:100%; height:100%; z-index:-2; pointer-events:none;}
 .category-field-scrim{position:absolute; inset:0; z-index:-1; pointer-events:none;
   background:radial-gradient(ellipse 620px 430px at 52% 38%, rgba(15,23,32,0.38) 0%, rgba(15,23,32,0.70) 58%, rgba(15,23,32,0.94) 100%);}
 #category-page > *:not(#category-field):not(.category-field-scrim){position:relative; z-index:1;}
+
 .cat-page-eyebrow{font-size:12px; color:var(--teal); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px;}
 .ex-topic-group{margin-bottom:28px;}
 .ex-topic-group h4{font-size:14px; margin:0 0 10px; color:var(--ink-dim);}
@@ -183,7 +176,6 @@ h1.headline{
 .cat-card.open .cat-body{border-top:1px solid var(--card-border);}
 .cat-body-inner{padding:20px;}
 
-/* formula sim */
 .sim-row{display:flex; align-items:center; gap:12px; margin-bottom:14px; font-size:13px;}
 .sim-row label{width:70px; color:var(--ink-dim); flex-shrink:0;}
 .sim-row input[type=range]{flex:1; accent-color:var(--teal);}
@@ -194,7 +186,6 @@ h1.headline{
 }
 canvas#sim-canvas{width:100%; height:140px; display:block; background:var(--bg-alt); border-radius:8px; margin-top:6px;}
 
-/* measurement simulators (Sissejuhatus füüsikasse) */
 .msim-block{margin-bottom:28px;}
 .msim-block:last-child{margin-bottom:0;}
 .msim-block h5{font-size:13.5px; font-weight:700; margin:0 0 12px; color:var(--ink);}
@@ -215,14 +206,12 @@ canvas#sim-canvas{width:100%; height:140px; display:block; background:var(--bg-a
 .msim-note{font-size:12.5px; color:var(--ink-faint); margin-top:10px; line-height:1.6;}
 .msim-btnrow{display:flex; gap:10px; margin-top:4px;}
 
-/* explanation accordion */
 .explain-item{border-bottom:1px solid var(--card-border); padding:12px 0;}
 .explain-item:last-child{border-bottom:none;}
 .explain-item summary{cursor:pointer; font-size:13.5px; font-weight:700; list-style:none; display:flex; justify-content:space-between;}
 .explain-item summary::-webkit-details-marker{display:none;}
 .explain-item p{font-size:14px; line-height:1.7; color:var(--ink-dim); margin:10px 0 0; font-family:'Literata',serif;}
 
-/* video grid */
 .video-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px;}
 @media(max-width:500px){.video-grid{grid-template-columns:1fr;}}
 .video-item{background:var(--bg-alt); border-radius:8px; overflow:hidden; cursor:pointer; border:1px solid var(--card-border);}
@@ -230,7 +219,6 @@ canvas#sim-canvas{width:100%; height:140px; display:block; background:var(--bg-a
 .play-btn{width:36px; height:36px; border-radius:50%; background:var(--coral); display:flex; align-items:center; justify-content:center; color:#1a1408; font-size:13px;}
 .video-item .vlabel{padding:10px 12px; font-size:12px; color:var(--ink-dim);}
 
-/* exercises */
 .ex-item{border:1px solid var(--card-border); border-radius:8px; padding:14px 16px; margin-bottom:10px;}
 .ex-item:last-child{margin-bottom:0;}
 .ex-q{font-size:13.5px; margin:0 0 10px;}
@@ -406,23 +394,8 @@ const topics = [
         <div class="msim-measure-row" id="msim-measurements"></div>
         <p class="msim-note"><b style="color:var(--ink);">Juhuslik viga</b> hajutab tulemusi eri suundades. <b style="color:var(--ink);">Süstemaatiline viga</b> nihutab tulemusi pidevalt samas suunas.</p>
       </div>
-
-      <div class="msim-block">
-        <h5>Aritmeetiline keskmine ja standardhälve</h5>
-        <div class="sim-formula" style="font-size:16px;">x̄ = (x₁ + x₂ + ... + xₙ) / n</div>
-        <div class="sim-formula" style="font-size:16px;">Sₓ = √( Σ(xᵢ − x̄)² / (n − 1) )</div>
-        <div class="msim-result" id="msim-stats-summary">Tee mõõtmisi eelmises plokis, et näha keskmist ja standardhälvet.</div>
-        <div class="msim-measure-row" id="msim-stats-values"></div>
-        <p class="msim-note">Standardhälve <b style="color:var(--ink);">Sₓ</b> näitab, kui palju üksikud mõõtmised keskmiselt keskmisest erinevad. Mida suurem juhuslik viga, seda suurem on standardhälve.</p>
-      </div>
     `,
     formulaInit:initMeasurementSims,
-    videos:[
-      {title:'Ühikute teisendasine teemal eesti keeles', url:'https://www.youtube.com/watch?v=YPhS1Dg-jJg&pp=ygUUdGVpc2VuZGFtaW5lIGZ1dXNpa2E%3D'},
-      {title:'Libateaduse teemal eesti keeles', url:'https://www.youtube.com/watch?v=JP446rFq3Ek&t=10s&pp=ygUKbGliYXRlYWR1cw%3D%3D'},
-      {title:'Sissejuhatus füüsikasse inglise keeles', url:'https://www.youtube.com/watch?v=uIojjqSm0m4&pp=ygUXaW50cm9kdWN0aW9uIHRvIHBoeXNpY3M%3D'},
-      {title:'Standardhälve teemal inglise keeles', url:'https://www.youtube.com/watch?v=IaTFpp-uzp0&pp=ygUOc3RhbmRhcmRow6RsdmU%3D'}
-    ],
     exercises:[
       {q:'Teisenda 0,00452 km millimeetriteks.', a:'4520'},
       {q:'Mitu sekundit on 2,5 tunnis?', a:'9000'},
@@ -553,7 +526,7 @@ function goHome(){
 const categories = [
   {key:'formula', icon:'ƒ', cls:'formula', title:'Valemid ja simulatsioonid', sub:'Interaktiivne arvutaja'},
   {key:'explain', icon:'§', cls:'text', title:'Selgitused', sub:'Teooria lühidalt'},
-  {key:'video', icon:'▶', cls:'video', title:'Videod', sub:"Lühikesed videotunnid youtube'ist"},
+  {key:'video', icon:'▶', cls:'video', title:'Videod', sub:'Lühikesed videotunnid'},
   {key:'exercise', icon:'✓', cls:'exercise', title:'Ülesanded', sub:'Kontrolli oma teadmisi'}
 ];
 
@@ -609,23 +582,13 @@ function openCategoryPage(topicIndex, catKey){
   } else if(catKey==='video'){
     content.innerHTML = `<div class="video-grid" id="video-grid"></div>`;
     const vids = document.getElementById('video-grid');
-    if(t.videos){
-      t.videos.forEach(v=>{
-        const item = document.createElement('div');
-        item.className = 'video-item';
-        item.innerHTML = `<div class="video-thumb"><div class="play-btn">▶</div></div><div class="vlabel">${v.title}</div>`;
-        item.addEventListener('click', ()=>window.open(v.url, '_blank'));
-        vids.appendChild(item);
-      });
-    } else {
-      ['Sissejuhatav loeng','Näidisülesanne koos lahenduskäiguga','Kordamine ja kokkuvõte'].forEach(v=>{
-        const item = document.createElement('div');
-        item.className = 'video-item';
-        item.innerHTML = `<div class="video-thumb"><div class="play-btn">▶</div></div><div class="vlabel">${v}</div>`;
-        item.addEventListener('click', ()=>window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(t.name+' füüsika'), '_blank'));
-        vids.appendChild(item);
-      });
-    }
+    ['Sissejuhatav loeng','Näidisülesanne koos lahenduskäiguga','Kordamine ja kokkuvõte'].forEach(v=>{
+      const item = document.createElement('div');
+      item.className = 'video-item';
+      item.innerHTML = `<div class="video-thumb"><div class="play-btn">▶</div></div><div class="vlabel">${v}</div>`;
+      item.addEventListener('click', ()=>window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(t.name+' füüsika'), '_blank'));
+      vids.appendChild(item);
+    });
   } else if(catKey==='exercise'){
     content.innerHTML = `<div id="ex-list"></div>`;
     renderExerciseList(document.getElementById('ex-list'), t.exercises, 'p'+topicIndex+'-');
@@ -678,7 +641,6 @@ function initMeasurementSims(){
   msimUpdate1();
   msimUpdate2();
   msimUpdate3();
-  msimUpdateStats();
 }
 
 function msimUpdate1(){
@@ -724,40 +686,11 @@ function msimMeasure(){
   document.getElementById('msim-measurements').appendChild(el);
   const avg = msimMeasurements.reduce((a,b)=>a+b,0)/msimMeasurements.length;
   document.getElementById('msim-avg').textContent = `Mõõtmisi: ${msimMeasurements.length}  |  keskmine: ${avg.toFixed(2)}`;
-  msimUpdateStats();
 }
 function msimClear(){
   msimMeasurements = [];
   document.getElementById('msim-measurements').innerHTML = '';
   document.getElementById('msim-avg').textContent = '';
-  msimUpdateStats();
-}
-
-function msimUpdateStats(){
-  const summary = document.getElementById('msim-stats-summary');
-  const valuesRow = document.getElementById('msim-stats-values');
-  if(!summary || !valuesRow) return;
-  const n = msimMeasurements.length;
-  if(n === 0){
-    summary.textContent = 'Tee mõõtmisi eelmises plokis, et näha keskmist ja standardhälvet.';
-    valuesRow.innerHTML = '';
-    return;
-  }
-  const mean = msimMeasurements.reduce((a,b)=>a+b,0) / n;
-  valuesRow.innerHTML = '';
-  msimMeasurements.forEach(v=>{
-    const el = document.createElement('span');
-    el.className = 'msim-measure';
-    el.textContent = v.toFixed(2);
-    valuesRow.appendChild(el);
-  });
-  if(n < 2){
-    summary.textContent = `x̄ = ${mean.toFixed(2)}  (vaja on vähemalt 2 mõõtmist, et arvutada standardhälvet)`;
-    return;
-  }
-  const variance = msimMeasurements.reduce((sum,v)=>sum + Math.pow(v-mean,2), 0) / (n-1);
-  const sx = Math.sqrt(variance);
-  summary.textContent = `n = ${n}   x̄ = ${mean.toFixed(3)}   Sₓ = ${sx.toFixed(3)}`;
 }
 
 function runSim(){
@@ -798,7 +731,6 @@ function checkEx(prefix, i, answer){
   }
 }
 
-/* starfield behind hero */
 (function(){
   const canvas = document.getElementById('field-canvas');
   const ctx = canvas.getContext('2d');
@@ -963,7 +895,6 @@ function checkEx(prefix, i, answer){
   requestAnimationFrame(step);
 })();
 
-/* subtle animated physics field behind simulation pages */
 (function(){
   const canvas=document.getElementById('category-field');
   if(!canvas) return;
@@ -989,6 +920,7 @@ function checkEx(prefix, i, answer){
   section.addEventListener('mouseleave',()=>{mouse.x=-9999;mouse.y=-9999;});
   function frame(){
     t+=.008; ctx.clearRect(0,0,w,h);
+    // faint curved field lines
     ctx.save();
     for(let i=0;i<7;i++){
       const cx=w*(.12+i*.14), cy=h*(.18+Math.sin(t*.35+i)*.06), rx=90+i*34, ry=55+i*20;
@@ -996,6 +928,7 @@ function checkEx(prefix, i, answer){
       ctx.strokeStyle=`rgba(95,180,162,${.025+i*.004})`; ctx.lineWidth=1; ctx.stroke();
     }
     ctx.restore();
+    // particles / measurement-like nodes
     particles.forEach(p=>{
       p.phase+=p.speed;
       const ox=Math.cos(p.phase)*p.orbit*.22, oy=Math.sin(p.phase)*p.orbit*.22;
@@ -1011,7 +944,6 @@ function checkEx(prefix, i, answer){
   requestAnimationFrame(frame);
 })();
 
-/* hero demo tabs */
 (function(){
   const tabs = document.querySelectorAll('.traj-tab');
   const views = {
@@ -1029,7 +961,6 @@ function checkEx(prefix, i, answer){
   });
 })();
 
-/* hero trajectory animation (parabola) */
 (function(){
   const path = document.querySelector('#traj-svg .traj-path');
   const dot = document.getElementById('traj-dot');
@@ -1050,7 +981,6 @@ function checkEx(prefix, i, answer){
   requestAnimationFrame(frame);
 })();
 
-/* oscillation animation (mass on a spring) */
 (function(){
   const dot = document.getElementById('osc-dot');
   const spring = document.getElementById('osc-spring');
@@ -1079,7 +1009,6 @@ function checkEx(prefix, i, answer){
   requestAnimationFrame(frame);
 })();
 
-/* circular motion animation */
 (function(){
   const dot = document.getElementById('circ-dot');
   const radiusLine = document.getElementById('circ-radius');
